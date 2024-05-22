@@ -1,4 +1,6 @@
 import dataclasses as dc
+import random
+import string
 
 import aio_pika
 
@@ -26,6 +28,15 @@ class Topology:
     sensor: aio_pika.abc.AbstractQueue
 
     exchange: aio_pika.abc.AbstractExchange
+
+
+def generate_msg_id() -> str:
+    return ''.join(
+        random.choices(
+            string.ascii_lowercase + string.digits,
+            k=10,
+        ),
+    )
 
 
 async def create_topology(chan: aio_pika.abc.AbstractRobustChannel) -> Topology:
