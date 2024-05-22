@@ -8,10 +8,8 @@ from aio_pika.abc import AbstractIncomingMessage, AbstractExchange
 from common import config
 from common.topology import (
     create_topology,
-    CORE_TOPIC,
-    DISEASE_DETECTOR_TOPIC,
     send_data,
-    generate_msg_id,
+    generate_msg_id, IRRIGATOR_TOPIC, HARDWARE_MANAGER_TOPIC, CLIMATE_TOPIC,
 )
 
 
@@ -19,7 +17,33 @@ async def handler(msg: AbstractIncomingMessage, exch: AbstractExchange):
     async with msg.process():
         data = json.loads(msg.body.decode())
         print(f"Hardware manager получил сообщение: {data=}")
-        # await send_data(exch, dict(id=generate_msg_id(), src=DISEASE_DETECTOR_TOPIC, dst=CORE_TOPIC, diseases=diseases))
+        temperature = data["temperature"]
+        irrigation = data["irrigation"]
+
+        clamped_irrigation = min(max(30, irrigation), 70)
+        if irrigation != clamped_irrigation:
+            print(f"!Команда на полив за лимитами, обрезаем: {irrigation=}, {clamped_irrigation=}")
+
+        clamped_temperature = min(max(17.0, temperature), 30.0)
+        if temperature != clamped_temperature:
+            print(f"!Команда климат контроля за лимитами, обрезаем: {temperature=}, {clamped_temperature=}")
+
+        await send_data(
+            exch,
+            dict(
+                id=generate_msg_id(),
+                src=HARDWARE_MANAGER_TOPIC,
+                dst=IRRIGATOR_TOPIC,
+                irrigation=clamped_irrigation),
+        )
+        await send_data(
+            exch,
+            dict(
+                id=generate_msg_id(),
+                src=HARDWARE_MANAGER_TOPIC,
+                dst=CLIMATE_TOPIC,
+                temperature=clamped_temperature),
+        )
 
 
 async def main():
