@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   rmq:
     image: rabbitmq:3-management-alpine
@@ -55,6 +57,16 @@ services:
     depends_on:
       - rmq
 
+  irrigation_controller:
+    image: irrigation_controller:latest
+    build:
+      context: .
+      dockerfile: ./irrigation_controller.dockerfile
+    environment:
+      RMQ_URI: 'amqp://guest:guest@rmq:5672/guest'
+    depends_on:
+      - rmq
+
 #  climate:
 #    image: climate
 #    build:
@@ -85,15 +97,6 @@ services:
 #    depends_on:
 #      - rmq
 #
-#  irrigation_controller:
-#    image: irrigation_controller
-#    build:
-#      context: .
-#      dockerfile: ./irrigation_controller.dockerfile
-#    environment:
-#      RMQ_URI: 'amqp://rmq'
-#    depends_on:
-#      - rmq
 #
 #  irrigator:
 #    image: irrigator

@@ -41,7 +41,7 @@ def generate_msg_id() -> str:
 
 
 async def send_data(exch: aio_pika.abc.AbstractExchange, data: dict) -> None:
-    print(f"Отправляем показания датчиков: {data=}")
+    print(f"Отправляем данные через очередь: {data=}")
     body = json.dumps(data).encode()
     await exch.publish(aio_pika.Message(body), MONITOR_TOPIC)
 
