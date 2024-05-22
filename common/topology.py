@@ -57,6 +57,7 @@ async def create_topology(chan: aio_pika.abc.AbstractRobustChannel) -> Topology:
     monitor_q = await chan.declare_queue(MONITOR_TOPIC, durable=True)
     sensor_q = await chan.declare_queue(SENSOR_TOPIC, durable=True)
 
+    print("Создали топологию очередей")
     return Topology(
         camera=camera_q,
         climate=climate_q,

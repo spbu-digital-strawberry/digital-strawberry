@@ -20,4 +20,4 @@ COPY core core
 RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
 USER appuser
 
-CMD ["python", "-m", "core"]
+CMD ["fastapi", "run", "core", "--port", "8000"]

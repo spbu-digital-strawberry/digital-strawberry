@@ -94,14 +94,15 @@ services:
       RMQ_URI: 'amqp://guest:guest@rmq:5672/guest'
     depends_on:
       - rmq
-#
-#  core:
-#    image: core
-#    build:
-#      context: .
-#      dockerfile: ./core.dockerfile
-#    environment:
-#      RMQ_URI: 'amqp://guest:guest@rmq:5672/guest'
-#    depends_on:
-#      - rmq
-#
+
+  core:
+    image: core:latest
+    ports:
+      - "8000:8000"
+    build:
+      context: .
+      dockerfile: ./core.dockerfile
+    environment:
+      RMQ_URI: 'amqp://guest:guest@rmq:5672/guest'
+    depends_on:
+      - rmq

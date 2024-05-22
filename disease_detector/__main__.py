@@ -31,7 +31,16 @@ async def handler(msg: AbstractIncomingMessage, exch: AbstractExchange):
     async with msg.process():
         data = json.loads(msg.body.decode())
         diseases = detect_diseases(data)
-        await send_data(exch, dict(id=generate_msg_id(), src=DISEASE_DETECTOR_TOPIC, dst=CORE_TOPIC, diseases=diseases))
+        await send_data(
+            exch,
+            dict(
+                id=generate_msg_id(),
+                src=DISEASE_DETECTOR_TOPIC,
+                dst=CORE_TOPIC,
+                diseases=diseases,
+                photo_id=data["photo_id"],
+            ),
+        )
 
 
 async def main():
