@@ -23,7 +23,8 @@ services:
     environment:
       RMQ_URI: 'amqp://guest:guest@rmq:5672/guest'
     depends_on:
-      - rmq
+      rmq:
+        condition: service_healthy
 
   monitor:
     image: monitor:latest
@@ -33,7 +34,8 @@ services:
     environment:
       RMQ_URI: 'amqp://guest:guest@rmq:5672/guest'
     depends_on:
-      - rmq
+      rmq:
+        condition: service_healthy
 
   sensor:
     image: sensor:latest
@@ -43,7 +45,8 @@ services:
     environment:
       RMQ_URI: 'amqp://guest:guest@rmq:5672/guest'
     depends_on:
-      - rmq
+      rmq:
+        condition: service_healthy
 
   disease_detector:
     image: disease_detector:latest
@@ -53,7 +56,8 @@ services:
     environment:
       RMQ_URI: 'amqp://guest:guest@rmq:5672/guest'
     depends_on:
-      - rmq
+      rmq:
+        condition: service_healthy
 
   irrigation_controller:
     image: irrigation_controller:latest
@@ -63,7 +67,8 @@ services:
     environment:
       RMQ_URI: 'amqp://guest:guest@rmq:5672/guest'
     depends_on:
-      - rmq
+      rmq:
+        condition: service_healthy
 
   hardware_manager:
     image: hardware_manager:latest
@@ -73,7 +78,8 @@ services:
     environment:
       RMQ_URI: 'amqp://guest:guest@rmq:5672/guest'
     depends_on:
-      - rmq
+      rmq:
+        condition: service_healthy
 
   irrigator:
     image: irrigator:latest
@@ -83,7 +89,8 @@ services:
     environment:
       RMQ_URI: 'amqp://guest:guest@rmq:5672/guest'
     depends_on:
-      - rmq
+      rmq:
+        condition: service_healthy
 
   climate:
     image: climate:latest
@@ -93,7 +100,8 @@ services:
     environment:
       RMQ_URI: 'amqp://guest:guest@rmq:5672/guest'
     depends_on:
-      - rmq
+      rmq:
+        condition: service_healthy
 
   core:
     image: core:latest
@@ -105,4 +113,5 @@ services:
     environment:
       RMQ_URI: 'amqp://guest:guest@rmq:5672/guest'
     depends_on:
-      - rmq
+      rmq:
+        condition: service_healthy
