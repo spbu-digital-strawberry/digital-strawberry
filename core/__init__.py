@@ -10,11 +10,10 @@ from aio_pika import connect_robust
 from aio_pika.abc import AbstractIncomingMessage, AbstractExchange
 
 from common import config
-from common.topology import create_topology
+from common.topology import create_topology, generate_msg_id
 
 OPERATOR_TOKEN = "very-secret-operator-token"
 WORKER_TOKEN = "very-secret-worker-token"
-
 
 N_OBSERVATIONS = 5
 diseases = deque()
@@ -94,3 +93,55 @@ async def get_stats(x_token: Annotated[str | None, Header()] = None) -> Stats:
     if x_token != OPERATOR_TOKEN:
         raise HTTPException(403)
     return Stats(diseases=get_diseases(), irrigation=get_irrigation(), temperature=get_temperature())
+
+
+class CreateTask(BaseModel):
+    description: str
+
+
+class MarkTaskAsDone(BaseModel):
+    id: str
+    comment: str
+
+
+class Task(BaseModel):
+    id: str
+    description: str
+    is_done: bool
+    comment: str | None = None
+
+
+tasks: list[Task] = []
+
+
+@app.get("/tasks")
+async def get_tasks(x_token: Annotated[str | None, Header()] = None) -> list[Task]:
+    if x_token not in (OPERATOR_TOKEN, WORKER_TOKEN):
+        raise HTTPException(403)
+    return tasks
+
+
+@app.post("/tasks", response_model=Task)
+async def create_task(task: CreateTask, x_token: Annotated[str | None, Header()] = None) -> Task:
+    if x_token != OPERATOR_TOKEN:
+        raise HTTPException(403)
+    task_id = generate_msg_id()
+    new_task = Task(id=task_id, description=task.description, is_done=False)
+    tasks.append(new_task)
+    return new_task
+
+
+@app.put("/tasks/{task_id}/done", response_model=Task)
+async def mark_task_as_done(
+        task_id: str,
+        mark_done: MarkTaskAsDone,
+        x_token: Annotated[str | None, Header()] = None,
+) -> Task:
+    if x_token != OPERATOR_TOKEN:
+        raise HTTPException(403)
+    for task in tasks:
+        if task.id == task_id:
+            task.is_done = True
+            task.comment = mark_done.comment
+            return task
+    raise HTTPException(status_code=404, detail="Task not found")
