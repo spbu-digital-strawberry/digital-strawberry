@@ -75,32 +75,31 @@ services:
     depends_on:
       - rmq
 
-#  climate:
-#    image: climate
-#    build:
-#      context: .
-#      dockerfile: ./climate.dockerfile
-#    environment:
-#      RMQ_URI: 'amqp://guest:guest@rmq:5672/guest'
-#    depends_on:
-#      - rmq
+  irrigator:
+    image: irrigator:latest
+    build:
+      context: .
+      dockerfile: ./irrigator.dockerfile
+    environment:
+      RMQ_URI: 'amqp://guest:guest@rmq:5672/guest'
+    depends_on:
+      - rmq
+
+  climate:
+    image: climate:latest
+    build:
+      context: .
+      dockerfile: ./climate.dockerfile
+    environment:
+      RMQ_URI: 'amqp://guest:guest@rmq:5672/guest'
+    depends_on:
+      - rmq
 #
 #  core:
 #    image: core
 #    build:
 #      context: .
 #      dockerfile: ./core.dockerfile
-#    environment:
-#      RMQ_URI: 'amqp://guest:guest@rmq:5672/guest'
-#    depends_on:
-#      - rmq
-#
-#
-#  irrigator:
-#    image: irrigator
-#    build:
-#      context: .
-#      dockerfile: ./irrigator.dockerfile
 #    environment:
 #      RMQ_URI: 'amqp://guest:guest@rmq:5672/guest'
 #    depends_on:

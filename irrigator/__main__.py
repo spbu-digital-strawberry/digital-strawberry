@@ -12,9 +12,9 @@ from common.topology import create_topology
 async def handler(msg: AbstractIncomingMessage, exch: AbstractExchange):
     async with msg.process():
         data = json.loads(msg.body.decode())
-        print(f"climate получил сообщение: {data=}")
-        temperature = data["temperature"]
-        print(f"Меняем температуру выращивания: {temperature=}")
+        print(f"irrigator получил сообщение: {data=}")
+        irrigation = data["irrigation"]
+        print(f"Поливаем клубнику: {irrigation=}")
 
 
 async def main():
@@ -23,7 +23,7 @@ async def main():
         chan = await conn.channel()
         topo = await create_topology(chan)
 
-        await topo.climate.consume(functools.partial(handler, exch=chan.default_exchange))
+        await topo.irrigator.consume(functools.partial(handler, exch=chan.default_exchange))
 
         await aio.Future()
 
