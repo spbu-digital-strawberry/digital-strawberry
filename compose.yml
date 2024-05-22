@@ -2,6 +2,7 @@ services:
   rmq:
     image: rabbitmq:3-management-alpine
     restart: on-failure
+    profiles: [e2e, all]
     environment:
       - RABBITMQ_DEFAULT_VHOST=guest
     ports:
@@ -17,6 +18,7 @@ services:
 
   camera:
     image: camera:latest
+    profiles: [all]
     build:
       context: .
       dockerfile: ./camera.dockerfile
@@ -28,6 +30,7 @@ services:
 
   monitor:
     image: monitor:latest
+    profiles: [e2e, all]
     build:
       context: .
       dockerfile: ./monitor.dockerfile
@@ -39,6 +42,7 @@ services:
 
   sensor:
     image: sensor:latest
+    profiles: [all]
     build:
       context: .
       dockerfile: ./sensor.dockerfile
@@ -50,6 +54,7 @@ services:
 
   disease_detector:
     image: disease_detector:latest
+    profiles: [e2e, all]
     build:
       context: .
       dockerfile: ./disease_detector.dockerfile
@@ -61,6 +66,7 @@ services:
 
   irrigation_controller:
     image: irrigation_controller:latest
+    profiles: [e2e, all]
     build:
       context: .
       dockerfile: ./irrigation_controller.dockerfile
@@ -72,6 +78,7 @@ services:
 
   hardware_manager:
     image: hardware_manager:latest
+    profiles: [e2e, all]
     build:
       context: .
       dockerfile: ./hardware_manager.dockerfile
@@ -83,6 +90,7 @@ services:
 
   irrigator:
     image: irrigator:latest
+    profiles: [all]
     build:
       context: .
       dockerfile: ./irrigator.dockerfile
@@ -94,6 +102,7 @@ services:
 
   climate:
     image: climate:latest
+    profiles: [all]
     build:
       context: .
       dockerfile: ./climate.dockerfile
@@ -105,6 +114,7 @@ services:
 
   core:
     image: core:latest
+    profiles: [e2e, all]
     ports:
       - "8000:8000"
     build:

@@ -46,7 +46,7 @@ async def send_data(exch: aio_pika.abc.AbstractExchange, data: dict) -> None:
     await exch.publish(aio_pika.Message(body), MONITOR_TOPIC)
 
 
-async def create_topology(chan: aio_pika.abc.AbstractRobustChannel) -> Topology:
+async def create_topology(chan: aio_pika.abc.AbstractChannel) -> Topology:
     camera_q = await chan.declare_queue(CAMERA_TOPIC, durable=True)
     climate_q = await chan.declare_queue(CLIMATE_TOPIC, durable=True)
     core_q = await chan.declare_queue(CORE_TOPIC, durable=True)
