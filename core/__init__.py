@@ -49,10 +49,14 @@ def get_diseases() -> set[str]:
 
 
 def get_temperature() -> float:
+    if len(temperature) == 0:
+        return -1.0
     return sum(temperature) / len(temperature)
 
 
 def get_irrigation() -> float:
+    if len(irrigation) == 0:
+        return -1.0
     return float(sum(irrigation)) / len(irrigation)
 
 
@@ -86,7 +90,7 @@ class Stats(BaseModel):
 
 
 @app.get("/get_stats")
-def get_stats(x_token: Annotated[str | None, Header()]) -> Stats:
+async def get_stats(x_token: Annotated[str | None, Header()] = None) -> Stats:
     if x_token != OPERATOR_TOKEN:
         raise HTTPException(403)
     return Stats(diseases=get_diseases(), irrigation=get_irrigation(), temperature=get_temperature())
