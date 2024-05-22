@@ -1,11 +1,19 @@
 import asyncio as aio
+from aio_pika import connect_robust
 
 from common.topology import create_topology
+from common import config
+
+from .producer import produce
 
 
 async def main():
-    create_topology()
-    print("hello from camera")
+    conn = await connect_robust(config.RMQ_URI)
+    async with conn:
+        chan = await conn.channel()
+        await create_topology(chan)
+
+        await produce(chan)
 
 
 if __name__ == "__main__":

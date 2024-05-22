@@ -28,7 +28,7 @@ class Topology:
     exchange: aio_pika.abc.AbstractExchange
 
 
-async def create_topology(chan: aio_pika.RobustChannel) -> Topology:
+async def create_topology(chan: aio_pika.abc.AbstractRobustChannel) -> Topology:
     camera_q = await chan.declare_queue(CAMERA_TOPIC, durable=True)
     climate_q = await chan.declare_queue(CLIMATE_TOPIC, durable=True)
     core_q = await chan.declare_queue(CORE_TOPIC, durable=True)
@@ -49,6 +49,5 @@ async def create_topology(chan: aio_pika.RobustChannel) -> Topology:
         irrigator=irrigator_q,
         monitor=monitor_q,
         sensor=sensor_q,
-        exchange=await chan.declare_exchange(""),
+        exchange=chan.default_exchange,
     )
-
