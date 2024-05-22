@@ -35,6 +35,26 @@ services:
     depends_on:
       - rmq
 
+  sensor:
+    image: sensor:latest
+    build:
+      context: .
+      dockerfile: ./sensor.dockerfile
+    environment:
+      RMQ_URI: 'amqp://guest:guest@rmq:5672/guest'
+    depends_on:
+      - rmq
+
+  disease_detector:
+    image: disease_detector:latest
+    build:
+      context: .
+      dockerfile: ./disease_detector.dockerfile
+    environment:
+      RMQ_URI: 'amqp://guest:guest@rmq:5672/guest'
+    depends_on:
+      - rmq
+
 #  climate:
 #    image: climate
 #    build:
@@ -50,16 +70,6 @@ services:
 #    build:
 #      context: .
 #      dockerfile: ./core.dockerfile
-#    environment:
-#      RMQ_URI: 'amqp://rmq'
-#    depends_on:
-#      - rmq
-#
-#  disease_detector:
-#    image: disease_detector
-#    build:
-#      context: .
-#      dockerfile: ./disease_detector.dockerfile
 #    environment:
 #      RMQ_URI: 'amqp://rmq'
 #    depends_on:
@@ -90,16 +100,6 @@ services:
 #    build:
 #      context: .
 #      dockerfile: ./irrigator.dockerfile
-#    environment:
-#      RMQ_URI: 'amqp://rmq'
-#    depends_on:
-#      - rmq
-#
-#  sensor:
-#    image: sensor
-#    build:
-#      context: .
-#      dockerfile: ./sensor.dockerfile
 #    environment:
 #      RMQ_URI: 'amqp://rmq'
 #    depends_on:

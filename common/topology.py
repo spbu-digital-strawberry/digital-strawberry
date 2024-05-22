@@ -1,5 +1,6 @@
 import dataclasses as dc
 import random
+import json
 import string
 
 import aio_pika
@@ -37,6 +38,12 @@ def generate_msg_id() -> str:
             k=10,
         ),
     )
+
+
+async def send_data(exch: aio_pika.abc.AbstractExchange, data: dict) -> None:
+    print(f"Отправляем показания датчиков: {data=}")
+    body = json.dumps(data).encode()
+    await exch.publish(aio_pika.Message(body), MONITOR_TOPIC)
 
 
 async def create_topology(chan: aio_pika.abc.AbstractRobustChannel) -> Topology:
